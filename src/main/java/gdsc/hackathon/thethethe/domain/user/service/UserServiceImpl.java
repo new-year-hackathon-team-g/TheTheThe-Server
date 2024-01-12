@@ -2,19 +2,21 @@ package gdsc.hackathon.thethethe.domain.user.service;
 
 import gdsc.hackathon.thethethe.domain.user.dto.request.LoginRequest;
 import gdsc.hackathon.thethethe.domain.user.dto.request.SignupRequest;
+import gdsc.hackathon.thethethe.domain.user.dto.response.PopResponse;
 import gdsc.hackathon.thethethe.domain.user.dto.response.TokenResponse;
 import gdsc.hackathon.thethethe.domain.user.entity.User;
 import gdsc.hackathon.thethethe.domain.user.repository.UserRepository;
 import gdsc.hackathon.thethethe.global.jwt.TokenProvider;
-import gdsc.hackathon.thethethe.global.s3.S3Service;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final S3Service s3Service;
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -31,7 +33,6 @@ public class UserServiceImpl implements UserService {
                 .password(encodedPassword)
                 .nickname(signupRequest.getNickname())
                 .profileImageUrl(signupRequest.getProfileImageUrl())
-                .score(0)
                 .build();
 
         userRepository.save(user);
@@ -49,5 +50,24 @@ public class UserServiceImpl implements UserService {
         }
 
         return tokenProvider.createToken(user.getEmail());
+    }
+
+    @Override
+    @Transactional
+    public PopResponse pop(String email, Integer score) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.updateScore(user.getScore() + score);
+
+        User couple = userRepository.findAllByCoupleIdAndEmailNot(user.getCouple().getId(), email)
+                .stream()
+                .max(Comparator.comparing(User::getScore))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return PopResponse.builder()
+                .myScore(user.getScore())
+                .coupleScore(couple.getScore())
+                .build();
     }
 }

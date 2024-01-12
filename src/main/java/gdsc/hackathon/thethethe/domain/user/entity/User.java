@@ -34,15 +34,19 @@ public class User {
     private Couple couple;
 
     @Builder
-    public User(String email, String password, String nickname, String profileImageUrl, Integer score) {
+    public User(String email, String password, String nickname, String profileImageUrl) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
-        this.score = score;
+        this.score = 0;
     }
 
     public void updateScore(Integer score){
         this.score = score;
+    }
+
+    public void setCouple(Couple couple) {
+        this.couple = couple;
     }
 }

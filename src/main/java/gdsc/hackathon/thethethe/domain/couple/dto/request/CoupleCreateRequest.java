@@ -1,11 +1,9 @@
 package gdsc.hackathon.thethethe.domain.couple.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
-@AllArgsConstructor
-public class CoupleSaveRequest {
+@Data
+public class CoupleCreateRequest {
     private String coupleName;
     private String coupleImageUrl;
     private String introduction;

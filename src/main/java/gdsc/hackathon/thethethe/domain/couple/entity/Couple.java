@@ -2,6 +2,7 @@ package gdsc.hackathon.thethethe.domain.couple.entity;
 
 import gdsc.hackathon.thethethe.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,18 +26,23 @@ public class Couple {
     @Column
     private String startDate;
     @Column
-    private Integer score;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<User> userList = new ArrayList<>();
+    private CoupleStatus status;
+    @Column(unique = true)
+    private String secretCode;
+    @OneToMany(mappedBy = "couple")
+    private List<User> users = new ArrayList<>();
 
-    public void updateScore(Integer score){
-        this.score = score;
-    }
-    public Couple(String coupleName, String coupleImageUrl, String introduction, String startDate) {
+    @Builder
+    public Couple(String coupleName, String coupleImageUrl, String introduction, String startDate, String secretCode) {
         this.coupleName = coupleName;
         this.coupleImageUrl = coupleImageUrl;
         this.introduction = introduction;
         this.startDate = startDate;
-        this.score = 0;
+        this.status = CoupleStatus.WAITING;
+        this.secretCode = secretCode;
+    }
+
+    public void updateStatus(CoupleStatus status) {
+        this.status = status;
     }
 }
