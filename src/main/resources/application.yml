@@ -14,3 +14,12 @@ spring:
       hibernate:
         format_sql: false
         use_sql_comments: trues
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-validity-in-milliseconds: ${JWT_ACCESS_TOKEN_VALIDITY_IN_MILLISECONDS}
+
+youtube:
+  api:
+    key: ${YOUTUBE_API_KEY}
+    url: ${YOUTUBE_API_URL}
