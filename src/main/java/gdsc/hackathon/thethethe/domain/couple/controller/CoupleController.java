@@ -35,36 +35,4 @@ public class CoupleController {
     public List<CoupleResponse> findCoupleRanking() {
         return coupleService.findCoupleRanking();
     }
-
-//    private final CoupleServiceaaa coupleService;
-//
-//    @GetMapping("/couples/{id}")
-//    public CoupleFindResponse findCoupleDetail(@PathVariable("id") Long id){
-//        return  coupleService.findCouple(id);
-//    }
-//
-//    @GetMapping("/couples")
-//    public List<CoupleFindResponse> findCoupleRanking(){
-//        return coupleService.findCoupleRanking();
-//    }
-//
-//    @PostMapping("/couples")
-//    public void saveCouple(@RequestBody CoupleSaveRequest coupleSaveRequest){
-//        coupleService.saveCouple(coupleSaveRequest);
-//    }
-//
-//    @DeleteMapping("/couples/{id}")
-//    public void deleteCouple(@PathVariable("id") Long id){
-//        coupleService.deleteCouple(id);
-//    }
-//
-//    @GetMapping("/pops")
-//    public PopFindResponse findCouplePop(Principal principal){
-//        return coupleService.findPop(Long.valueOf(principal.getName()));
-//    }
-//
-//    @PatchMapping("/pops")
-//    public void updateCouplePop(@RequestBody PopUpdateRequest popUpdateRequest, Principal principal){
-//       coupleService.updatePop(Long.valueOf(principal.getName()),popUpdateRequest);
-//    }
 }

@@ -16,7 +16,6 @@ import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +27,14 @@ public class CoupleServiceImpl implements CoupleService {
     @Override
     @Transactional
     public CoupleResponse findCouple(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저 id입니다."));
+        User user = userRepository.findByEmailWithCouple(email)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저 이메일입니다."));
 
         Couple couple = user.getCouple();
+        List<User> users = couple.getUsers();
 
-        List<User> users = userRepository.findAllByCoupleId(couple.getId());
+        Integer coupleTotalScore = userRepository.findSumOfMaxScoresInCouple(couple.getId())
+                .orElse(0);
 
         return CoupleResponse.builder()
                 .id(couple.getId())
@@ -48,12 +49,16 @@ public class CoupleServiceImpl implements CoupleService {
                                 .nickname(user1.getNickname())
                                 .email(user1.getEmail())
                                 .profileImageUrl(user1.getProfileImageUrl())
+                                .score(user1.getScore())
                                 .build())
                         .toList())
+                .coupleTotalScore(coupleTotalScore)
                 .build();
     }
 
+
     @Override
+    @Transactional
     public String createCouple(String email, CoupleCreateRequest coupleCreateRequest) {
         Couple couple = Couple.builder()
                 .coupleName(coupleCreateRequest.getCoupleName())
@@ -93,12 +98,15 @@ public class CoupleServiceImpl implements CoupleService {
         Couple couple = coupleRepository.findBySecretCode(secretCode)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 커플 코드입니다."));
 
-        couple.updateStatus(CoupleStatus.ACCEPTED);
+        int updatedCoupleRows = coupleRepository.updateCoupleStatusBySecretCode(CoupleStatus.ACCEPTED, secretCode);
+        if (updatedCoupleRows == 0) {
+            throw new RuntimeException("커플 상태를 변경할 수 없습니다.");
+        }
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저 id입니다."));
-
-        user.setCouple(couple);
+        int updatedUserRows = userRepository.updateUserCoupleByEmail(couple, email);
+        if (updatedUserRows == 0) {
+            throw new RuntimeException("사용자의 커플을 설정할 수 없습니다.");
+        }
 
         return "success";
     }

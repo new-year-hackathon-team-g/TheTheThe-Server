@@ -29,7 +29,7 @@ public class Couple {
     private CoupleStatus status;
     @Column(unique = true)
     private String secretCode;
-    @OneToMany(mappedBy = "couple")
+    @OneToMany(mappedBy = "couple", fetch = FetchType.EAGER)
     private List<User> users = new ArrayList<>();
 
     @Builder

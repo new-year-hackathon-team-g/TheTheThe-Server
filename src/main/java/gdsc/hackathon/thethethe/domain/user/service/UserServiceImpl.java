@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -60,14 +58,12 @@ public class UserServiceImpl implements UserService {
 
         user.updateScore(user.getScore() + score);
 
-        User couple = userRepository.findAllByCoupleIdAndEmailNot(user.getCouple().getId(), email)
-                .stream()
-                .max(Comparator.comparing(User::getScore))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Integer partnerScore = userRepository.findSumOfMaxScoresInCouple(user.getCouple().getId())
+                .orElseThrow(() -> new RuntimeException("Couple not found")) - user.getScore();
 
         return PopResponse.builder()
                 .myScore(user.getScore())
-                .coupleScore(couple.getScore())
+                .coupleScore(partnerScore)
                 .build();
     }
 }
