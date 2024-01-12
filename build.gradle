@@ -31,6 +31,16 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    //S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    //파일 업로드 메소드 라이브러리
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
+
+
 }
 
 tasks.named('test') {

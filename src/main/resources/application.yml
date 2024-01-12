@@ -14,3 +14,51 @@ spring:
       hibernate:
         format_sql: false
         use_sql_comments: trues
+
+
+
+  # multipartFile 용량 제한
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+#
+#cloud:
+#  aws:
+#    credentials:
+#      accessKey: AKIARS33SSNQQ4PT5SX6
+#      secretKey: 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
+#
+#    s3:
+#      bucket: plowithmebucket
+#    region:
+#      static: ap-northeast-2
+#    stack:
+#      auto: false
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIARS33SSNQYUIODIP2
+      #${S3_ACCESSKEY}
+      #${S3_SECRETKEY}
+      secretKey: 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
+
+    s3:
+      bucket: thethethe-bucket
+        #${S3_BUCKET_NAME}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+##s3
+#cloud.aws.credentials.accessKey=AKIARS33SSNQQ4PT5SX6
+#cloud.aws.credentials.secretKey=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
+#cloud.aws.stack.auto=false
+#
+## AWS S3 Service bucket
+#cloud.aws.s3.bucket=plowithmebucket
+#cloud.aws.region.static=ap-northeast-2
+#
+## AWS S3 Bucket URL
+#cloud.aws.s3.bucket.url=https://s3.ap-northeast-2.amazonaws.com/plowithmebucket
