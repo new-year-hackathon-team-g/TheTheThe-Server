@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/signup", "/login").permitAll()
+                                .requestMatchers("/signup", "/login", "/api/videos/**").permitAll()
                                 .requestMatchers("/").authenticated()
                                 .anyRequest().authenticated()
                 )
