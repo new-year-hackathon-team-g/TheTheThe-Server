@@ -2,10 +2,12 @@ package gdsc.hackathon.thethethe.domain.user.service;
 
 import gdsc.hackathon.thethethe.domain.user.dto.request.LoginRequest;
 import gdsc.hackathon.thethethe.domain.user.dto.request.SignupRequest;
+import gdsc.hackathon.thethethe.domain.user.dto.response.PopResponse;
 import gdsc.hackathon.thethethe.domain.user.dto.response.TokenResponse;
 import gdsc.hackathon.thethethe.domain.user.entity.User;
 import gdsc.hackathon.thethethe.domain.user.repository.UserRepository;
 import gdsc.hackathon.thethethe.global.jwt.TokenProvider;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -25,11 +26,11 @@ public class UserServiceImpl implements UserService {
         }
 
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
-
         User user = User.builder()
                 .email(signupRequest.getEmail())
                 .password(encodedPassword)
                 .nickname(signupRequest.getNickname())
+                .profileImageUrl(signupRequest.getProfileImageUrl())
                 .build();
 
         userRepository.save(user);
@@ -47,5 +48,22 @@ public class UserServiceImpl implements UserService {
         }
 
         return tokenProvider.createToken(user.getEmail());
+    }
+
+    @Override
+    @Transactional
+    public PopResponse pop(String email, Integer score) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.updateScore(user.getScore() + score);
+
+        Integer partnerScore = userRepository.findSumOfMaxScoresInCouple(user.getCouple().getId())
+                .orElseThrow(() -> new RuntimeException("Couple not found")) - user.getScore();
+
+        return PopResponse.builder()
+                .myScore(user.getScore())
+                .coupleScore(partnerScore)
+                .build();
     }
 }
