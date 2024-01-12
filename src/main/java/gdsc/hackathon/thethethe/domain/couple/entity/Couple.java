@@ -1,9 +1,9 @@
 package gdsc.hackathon.thethethe.domain.couple.entity;
 
+import gdsc.hackathon.thethethe.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +26,12 @@ public class Couple {
     private String startDate;
     @Column
     private Integer score;
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//    private List<User> userList = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<User> userList = new ArrayList<>();
 
+    public void updateScore(Integer score){
+        this.score = score;
+    }
     public Couple(String coupleName, String coupleImageUrl, String introduction, String startDate) {
         this.coupleName = coupleName;
         this.coupleImageUrl = coupleImageUrl;

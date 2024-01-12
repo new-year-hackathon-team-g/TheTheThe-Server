@@ -13,9 +13,9 @@ public class CoupleFindResponse {
     private String coupleImageUrl;
     private String introduction;
     private String startDate;
+    private Integer score;
 
     public static CoupleFindResponse toDto(Couple couple) {
-        return new CoupleFindResponse(couple.getCoupleName(), couple.getCoupleImageUrl(), couple.getIntroduction(), couple.getStartDate()
-        );
+        return new CoupleFindResponse(couple.getCoupleName(), couple.getCoupleImageUrl(), couple.getIntroduction(), couple.getStartDate(), couple.getScore());
     }
 }

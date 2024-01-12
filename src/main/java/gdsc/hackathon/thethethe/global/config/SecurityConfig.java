@@ -30,9 +30,10 @@ public class SecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/signup", "/login", "/api/videos/**").permitAll()
+                                .requestMatchers("/signup", "/login", "/api/videos/**","**").permitAll()
                                 .requestMatchers("/").authenticated()
                                 .anyRequest().authenticated()
                 )

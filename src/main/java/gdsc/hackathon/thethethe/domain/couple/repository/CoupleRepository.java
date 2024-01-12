@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface CoupleRepository extends JpaRepository<Couple, Long> {
     Optional<Couple> findById(Long id);
-    List<Couple> findByAllOrderByScoreDesc();
+    List<Couple> findAllByOrderByScoreDesc();
 }
 

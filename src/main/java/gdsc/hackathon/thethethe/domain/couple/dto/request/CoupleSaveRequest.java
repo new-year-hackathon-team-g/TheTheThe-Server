@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class CoupleSaveRequest {
     private String coupleName;
-    private MultipartFile coupleImage;
+    private String coupleImageUrl;
     private String introduction;
     private String startDate;
 

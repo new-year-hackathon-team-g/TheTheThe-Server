@@ -6,6 +6,7 @@ import gdsc.hackathon.thethethe.domain.user.dto.response.TokenResponse;
 import gdsc.hackathon.thethethe.domain.user.entity.User;
 import gdsc.hackathon.thethethe.domain.user.repository.UserRepository;
 import gdsc.hackathon.thethethe.global.jwt.TokenProvider;
+import gdsc.hackathon.thethethe.global.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
+    private final S3Service s3Service;
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -25,11 +26,12 @@ public class UserServiceImpl implements UserService {
         }
 
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
-
         User user = User.builder()
                 .email(signupRequest.getEmail())
                 .password(encodedPassword)
                 .nickname(signupRequest.getNickname())
+                .profileImageUrl(signupRequest.getProfileImageUrl())
+                .score(0)
                 .build();
 
         userRepository.save(user);
